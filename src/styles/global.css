@@ -1,0 +1,276 @@
+/*
+ * GLOBAL STYLES — design tokens + base elements
+ * ---------------------------------------------
+ * Plain CSS (no framework). Rationale: the catalogue is small, the design is
+ * deliberately minimal, and a handful of tokens + a few component stylesheets
+ * are easier to read and audit than a utility framework — and ship near-zero
+ * CSS overhead. Everything is driven by the custom properties below, so spacing
+ * and type scale stay consistent across components.
+ */
+
+:root {
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*   8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /*    16px */
+  --space-5: 1.5rem; /*  24px */
+  --space-6: 2rem; /*    32px */
+  --space-8: 3rem; /*    48px */
+  --space-10: 4rem; /*   64px */
+
+  /* ---- Type scale ---- */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", Times, serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.78rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.6;
+
+  /* ---- Colour (monochrome + one restrained accent) ---- */
+  --color-bg: #ffffff;
+  --color-surface: #fafafa;
+  --color-surface-hover: #f4f4f5;
+  --color-border: #e4e4e7;
+  --color-border-strong: #d4d4d8;
+  --color-text: #18181b;
+  --color-text-muted: #5b5b66;
+  --color-text-subtle: #8a8a94;
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1e40af;
+  --color-focus: #2563eb;
+
+  /* ---- Other tokens ---- */
+  --radius: 6px;
+  --radius-sm: 4px;
+  --content-width: 72rem;
+  --reading-width: 44rem;
+  --border: 1px solid var(--color-border);
+}
+
+/* ---- Reset / base ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--leading-tight);
+  font-weight: 600;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---- Layout helpers ---- */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+/*
+ * Flash guard for shared filtered links: while `is-prefiltering` is set on
+ * <html> (by the catalogue's inline script, only when the URL has filters),
+ * hide the whole result grid until the client script applies the real filters
+ * and removes the class. Hiding the grid (rather than individual cards) avoids
+ * leaving empty grid cells during the brief pre-filter window.
+ * See `pages/catalogue.astro` and `scripts/catalogue.ts`.
+ */
+.is-prefiltering .catalogue__grid {
+  display: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Reusable button / control primitives ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.btn:hover {
+  background: var(--color-surface-hover);
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn--ghost {
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+  padding-inline: var(--space-2);
+}
+
+.btn--ghost:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+  }
+}
+
+/*
+ * ---- Prose: styling for rendered Markdown pages ----
+ * Lives in global CSS (not a scoped component style) because the markdown HTML
+ * is generated at render time and wouldn't receive Astro's scoped attributes.
+ */
+.prose {
+  max-width: var(--reading-width);
+  color: var(--color-text);
+}
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+.prose h1 {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+.prose h2 {
+  font-size: var(--text-xl);
+  margin-top: var(--space-8);
+}
+.prose h3 {
+  font-size: var(--text-lg);
+  margin-top: var(--space-6);
+}
+.prose p,
+.prose li {
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+.prose ul,
+.prose ol {
+  margin-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.prose li {
+  margin: 0;
+}
+.prose strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  overflow-x: auto;
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.prose blockquote {
+  margin-left: 0;
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-border-strong);
+  color: var(--color-text-subtle);
+}
+.prose a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

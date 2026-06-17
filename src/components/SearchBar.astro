@@ -1,0 +1,80 @@
+---
+/**
+ * SearchBar — a single text input. Purely presentational; the catalogue's
+ * client script wires it up (reads/writes `value`, listens for input). The
+ * `initialValue` lets the server pre-fill it from the URL so a shared link
+ * shows the right query before JS runs.
+ */
+interface Props {
+  initialValue?: string;
+}
+const { initialValue = '' } = Astro.props;
+---
+
+<div class="searchbar">
+  <label class="visually-hidden" for="catalogue-search">
+    Search textbooks
+  </label>
+  <svg
+    class="searchbar__icon"
+    aria-hidden="true"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    <circle cx="11" cy="11" r="8"></circle>
+    <path d="m21 21-4.3-4.3"></path>
+  </svg>
+  <input
+    type="search"
+    id="catalogue-search"
+    name="search"
+    class="searchbar__input"
+    placeholder="Search by title, description, keyword or author…"
+    autocomplete="off"
+    value={initialValue}
+    data-search-input
+  />
+</div>
+
+<style>
+  .searchbar {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .searchbar__icon {
+    position: absolute;
+    left: var(--space-3);
+    color: var(--color-text-subtle);
+    pointer-events: none;
+  }
+  .searchbar__input {
+    width: 100%;
+    font-family: inherit;
+    font-size: var(--text-base);
+    color: var(--color-text);
+    padding: var(--space-3) var(--space-4) var(--space-3) var(--space-8);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-bg);
+    transition: border-color 0.12s ease;
+  }
+  .searchbar__input::placeholder {
+    color: var(--color-text-subtle);
+  }
+  .searchbar__input:focus {
+    outline: none;
+    border-color: var(--color-focus);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  }
+  /* Hide the native clear control for a consistent look. */
+  .searchbar__input::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+  }
+</style>

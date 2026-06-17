@@ -1,0 +1,119 @@
+---
+/**
+ * FilterPanel — renders one checkbox group per facet, with values derived
+ * dynamically from the dataset (passed in as `facets`; never hardcoded).
+ *
+ * Presentational only: the catalogue client script reads checkbox state,
+ * applies the AND/OR rules and syncs the URL. The server pre-checks boxes from
+ * `selected` (parsed from the URL) so a shared link renders correctly pre-JS.
+ */
+import type { Facet, CatalogueState } from '../lib/types';
+
+interface Props {
+  facets: Facet[];
+  selected: CatalogueState['facets'];
+}
+const { facets, selected } = Astro.props;
+---
+
+<form class="filters" data-filter-panel aria-label="Filter textbooks">
+  <div class="filters__header">
+    <h2 class="filters__title">Filters</h2>
+    <button type="button" class="btn btn--ghost" data-clear-all hidden>
+      Clear all
+    </button>
+  </div>
+
+  {
+    facets.map((facet) => (
+      <fieldset class="filter-group">
+        <legend class="filter-group__legend">{facet.label}</legend>
+        <ul class="filter-group__list">
+          {facet.values.map((value) => {
+            const isChecked = selected[facet.key]?.includes(value) ?? false;
+            return (
+              <li>
+                <label class="filter-option">
+                  <input
+                    type="checkbox"
+                    name={facet.key}
+                    value={value}
+                    checked={isChecked}
+                    data-facet={facet.key}
+                  />
+                  <span class="filter-option__label">{value}</span>
+                </label>
+              </li>
+            );
+          })}
+        </ul>
+      </fieldset>
+    ))
+  }
+</form>
+
+<style>
+  .filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+  .filters__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .filters__title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-subtle);
+  }
+
+  .filter-group {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  .filter-group__legend {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    padding: 0;
+    margin-bottom: var(--space-2);
+  }
+  .filter-group__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  .filter-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    padding: var(--space-1) 0;
+    cursor: pointer;
+  }
+  .filter-option:hover {
+    color: var(--color-text);
+  }
+  .filter-option input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .filter-option__label {
+    /* Values are short tokens (en, python, …); keep them readable as-is. */
+    text-transform: none;
+  }
+</style>

@@ -1,0 +1,158 @@
+[
+  {
+    "id": "linear-algebra-foundations",
+    "title": "Foundations of Linear Algebra",
+    "description": "A rigorous yet approachable introduction to vector spaces, linear maps, eigenvalues and the spectral theorem, with worked examples and exercises designed for first-year undergraduates.",
+    "authors": ["Ada Whitfield", "Marcus Lindqvist"],
+    "url": "https://example-press.github.io/linear-algebra-foundations/",
+    "language": "en",
+    "variant": "general",
+    "subject": "math",
+    "keywords": ["matrix", "vector space", "eigenvalues", "spectral theorem"],
+    "meta": {
+      "edition": "2nd",
+      "license": "CC-BY-4.0",
+      "difficulty": "introductory"
+    }
+  },
+  {
+    "id": "intro-statistics-python",
+    "title": "Introduction to Statistics with Python",
+    "description": "Learn descriptive and inferential statistics through hands-on Python notebooks covering distributions, hypothesis testing, regression and resampling methods.",
+    "authors": ["Priya Nair"],
+    "url": "https://example-press.github.io/stats-with-python/",
+    "language": "en",
+    "variant": "python",
+    "subject": "stats",
+    "keywords": ["probability", "hypothesis testing", "regression", "pandas"],
+    "meta": {
+      "license": "MIT",
+      "difficulty": "introductory",
+      "prerequisites": ["basic-python"]
+    }
+  },
+  {
+    "id": "applied-statistics-r",
+    "title": "Applied Statistics with R",
+    "description": "A practical, project-driven course in applied statistics using the R language and the tidyverse, from exploratory data analysis to mixed-effects models.",
+    "authors": ["Eleanor Voss", "Tom Bergström"],
+    "url": "https://example-press.github.io/applied-statistics-r/",
+    "language": "en",
+    "variant": "r",
+    "subject": "stats",
+    "keywords": ["tidyverse", "regression", "anova", "data analysis"],
+    "meta": {
+      "license": "CC-BY-SA-4.0",
+      "difficulty": "intermediate"
+    }
+  },
+  {
+    "id": "algorithms-and-data-structures",
+    "title": "Algorithms and Data Structures",
+    "description": "Covers asymptotic analysis, sorting and searching, trees, graphs, dynamic programming and complexity theory, with language-agnostic pseudocode throughout.",
+    "authors": ["Hiroshi Tanaka"],
+    "url": "https://example-press.github.io/algorithms-ds/",
+    "language": "en",
+    "variant": "general",
+    "subject": "cs",
+    "keywords": ["sorting", "graphs", "dynamic programming", "complexity"],
+    "meta": {
+      "edition": "3rd",
+      "license": "CC-BY-NC-4.0",
+      "difficulty": "intermediate"
+    }
+  },
+  {
+    "id": "calculo-diferencial",
+    "title": "Cálculo Diferencial e Integral",
+    "description": "Curso completo de cálculo de una variable: límites, derivadas, integrales y series, con énfasis en la intuición geométrica y aplicaciones físicas.",
+    "authors": ["Sofía Ramírez", "Diego Herrera"],
+    "url": "https://example-press.github.io/calculo-diferencial/",
+    "language": "es",
+    "variant": "general",
+    "subject": "math",
+    "keywords": ["límites", "derivadas", "integrales", "series"],
+    "meta": {
+      "license": "CC-BY-4.0",
+      "difficulty": "introductory"
+    }
+  },
+  {
+    "id": "machine-learning-python",
+    "title": "Machine Learning in Python",
+    "description": "From linear models to neural networks, this hands-on text builds intuition for supervised and unsupervised learning using scikit-learn and PyTorch.",
+    "authors": ["Wei Chen", "Olúwaséun Adébáyò"],
+    "url": "https://example-press.github.io/ml-in-python/",
+    "language": "en",
+    "variant": "python",
+    "subject": "cs",
+    "keywords": ["neural networks", "scikit-learn", "pytorch", "classification"],
+    "meta": {
+      "license": "Apache-2.0",
+      "difficulty": "advanced",
+      "prerequisites": ["intro-statistics-python", "linear-algebra-foundations"]
+    }
+  },
+  {
+    "id": "probabilites-et-statistiques",
+    "title": "Probabilités et Statistiques",
+    "description": "Une introduction soignée à la théorie des probabilités et à l'inférence statistique, des variables aléatoires aux tests d'hypothèses, avec exercices corrigés.",
+    "authors": ["Camille Dubois"],
+    "url": "https://example-press.github.io/probabilites-statistiques/",
+    "language": "fr",
+    "variant": "general",
+    "subject": "stats",
+    "keywords": ["probabilité", "variables aléatoires", "inférence", "tests"],
+    "meta": {
+      "license": "CC-BY-4.0",
+      "difficulty": "intermediate"
+    }
+  },
+  {
+    "id": "discrete-mathematics",
+    "title": "Discrete Mathematics for Computing",
+    "description": "Logic, set theory, combinatorics, graph theory and number theory presented with a computing audience in mind, including proofs and applications to algorithms.",
+    "authors": ["Grace Okonkwo"],
+    "url": "https://example-press.github.io/discrete-mathematics/",
+    "language": "en",
+    "variant": "general",
+    "subject": "math",
+    "keywords": ["logic", "combinatorics", "graph theory", "proofs"],
+    "meta": {
+      "license": "CC-BY-SA-4.0",
+      "difficulty": "intermediate"
+    }
+  },
+  {
+    "id": "datenanalyse-mit-r",
+    "title": "Datenanalyse mit R",
+    "description": "Eine praxisnahe Einführung in die Datenanalyse mit R: Datenaufbereitung, Visualisierung mit ggplot2 und statistische Modellierung anhand realer Datensätze.",
+    "authors": ["Lukas Brandt", "Hannah Vogel"],
+    "url": "https://example-press.github.io/datenanalyse-r/",
+    "language": "de",
+    "variant": "r",
+    "subject": "stats",
+    "keywords": ["ggplot2", "visualisierung", "modellierung", "tidyverse"],
+    "meta": {
+      "license": "CC-BY-4.0",
+      "difficulty": "introductory"
+    }
+  },
+  {
+    "id": "deep-learning-foundations",
+    "title": "Foundations of Deep Learning",
+    "description": "A mathematically grounded treatment of deep learning: backpropagation, optimisation, convolutional and recurrent architectures, attention and transformers.",
+    "authors": ["Nadia Hassan", "Robert Fielding", "Yuki Sato"],
+    "url": "https://example-press.github.io/deep-learning-foundations/",
+    "language": "en",
+    "variant": "python",
+    "subject": "cs",
+    "keywords": ["backpropagation", "transformers", "attention", "optimisation"],
+    "meta": {
+      "edition": "1st",
+      "license": "CC-BY-NC-SA-4.0",
+      "difficulty": "advanced",
+      "prerequisites": ["machine-learning-python"]
+    }
+  }
+]

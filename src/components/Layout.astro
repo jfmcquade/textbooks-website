@@ -1,0 +1,166 @@
+---
+/**
+ * Layout — the single site shell: <head>, header nav, main slot, footer.
+ * Every page renders inside this so spacing, navigation and metadata stay
+ * consistent. Static page links could be made dynamic from the pages
+ * collection later; kept explicit here for clarity.
+ */
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Constrain the main content to a comfortable reading width (markdown pages). */
+  narrow?: boolean;
+}
+
+const { title, description, narrow = false } = Astro.props;
+const siteName = 'Open Textbook Catalogue';
+const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
+
+// `import.meta.env.BASE_URL` respects any configured `base` (GitHub Pages
+// subpath) so internal links work in every deployment target.
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const nav = [
+  { href: `${base}/`, label: 'Home' },
+  { href: `${base}/catalogue`, label: 'Catalogue' },
+  { href: `${base}/about`, label: 'About' },
+];
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="site-header__brand" href={`${base}/`}>{siteName}</a>
+        <nav class="site-nav" aria-label="Primary">
+          {
+            nav.map((item) => {
+              const itemPath = item.href.replace(/\/$/, '') || '/';
+              const isCurrent =
+                itemPath === '/'
+                  ? currentPath === '/'
+                  : currentPath === itemPath ||
+                    currentPath.startsWith(itemPath + '/');
+              return (
+                <a
+                  href={item.href}
+                  class="site-nav__link"
+                  aria-current={isCurrent ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              );
+            })
+          }
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class:list={['site-main', { 'site-main--narrow': narrow }]}>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <p>
+          A static catalogue of openly hosted digital textbooks. Each entry
+          links to an externally hosted site.
+        </p>
+      </div>
+    </footer>
+
+    <style>
+      .skip-link {
+        position: absolute;
+        left: var(--space-2);
+        top: var(--space-2);
+        transform: translateY(-200%);
+        background: var(--color-text);
+        color: #fff;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius-sm);
+        z-index: 10;
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+      }
+
+      .site-header {
+        border-bottom: var(--border);
+        background: var(--color-bg);
+      }
+      .site-header__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        min-height: 3.5rem;
+        flex-wrap: wrap;
+      }
+      .site-header__brand {
+        font-weight: 600;
+        font-size: var(--text-lg);
+        color: var(--color-text);
+        letter-spacing: -0.01em;
+      }
+      .site-header__brand:hover {
+        text-decoration: none;
+      }
+      .site-nav {
+        display: flex;
+        gap: var(--space-1);
+      }
+      .site-nav__link {
+        color: var(--color-text-muted);
+        font-size: var(--text-sm);
+        font-weight: 500;
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-sm);
+      }
+      .site-nav__link:hover {
+        color: var(--color-text);
+        background: var(--color-surface-hover);
+        text-decoration: none;
+      }
+      .site-nav__link[aria-current='page'] {
+        color: var(--color-text);
+        background: var(--color-surface-hover);
+      }
+
+      .site-main {
+        min-height: 60vh;
+        padding-block: var(--space-8);
+      }
+      .site-main--narrow {
+        /* reading-width constraint applied by inner .container of the page */
+      }
+
+      .site-footer {
+        border-top: var(--border);
+        background: var(--color-surface);
+        margin-top: var(--space-10);
+        color: var(--color-text-muted);
+        font-size: var(--text-sm);
+      }
+      .site-footer__inner {
+        padding-block: var(--space-6);
+        max-width: var(--reading-width);
+      }
+      .site-footer p {
+        margin: 0;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+---
+/**
+ * GENERIC MARKDOWN PAGE ROUTE
+ * ---------------------------
+ * Renders any Markdown file in the `pages` content collection
+ * (`src/content/pages/*.md`) at the URL given by its frontmatter `slug`
+ * (falling back to the filename). There is NO per-page route file: adding a new
+ * static page means dropping a `.md` file into that folder — no routing changes.
+ *
+ *   ---
+ *   title: About
+ *   slug: about
+ *   template: page   # optional layout hint (Astro reserves `layout`)
+ *   ---
+ *
+ * `getStaticPaths` enumerates the collection at build time and emits one static
+ * page per entry.
+ */
+import { getCollection, render } from 'astro:content';
+import Layout from '../components/Layout.astro';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({
+    // Frontmatter `slug` wins; otherwise use the entry id (the filename).
+    params: { slug: page.data.slug ?? page.id },
+    props: { page },
+  }));
+}
+
+type Props = {
+  page: Awaited<ReturnType<typeof getCollection<'pages'>>>[number];
+};
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<Layout title={page.data.title} description={page.data.description} narrow>
+  <article class="container prose">
+    <Content />
+  </article>
+</Layout>

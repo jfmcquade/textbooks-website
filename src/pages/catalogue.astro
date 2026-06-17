@@ -1,0 +1,166 @@
+---
+/**
+ * Catalogue — the primary feature page.
+ *
+ * This is a STATIC page: all textbook cards are rendered at build time, and the
+ * filter/search work happens entirely client-side (see `scripts/catalogue.ts`).
+ * The client reads the URL on load, sets the controls, and shows/hides cards.
+ *
+ * `initialState` is parsed from the URL and passed to the controls so they
+ * prefill correctly under SSR/hybrid hosting. Under static hosting the build
+ * has no query string, so it is empty here and the client takes over on load.
+ * A tiny inline "flash guard" (below) hides the cards on a filtered deep-link
+ * until the client has applied the filters, so shared links don't flash.
+ */
+import Layout from '../components/Layout.astro';
+import FilterPanel from '../components/FilterPanel.astro';
+import SearchBar from '../components/SearchBar.astro';
+import TextbookCard from '../components/TextbookCard.astro';
+import { getTextbooks, getFacets } from '../lib/textbooks';
+import { stateFromParams } from '../lib/filtering';
+
+const books = await getTextbooks();
+const facets = await getFacets();
+const initialState = stateFromParams(Astro.url.searchParams);
+---
+
+<Layout
+  title="Catalogue"
+  description="Browse and filter the catalogue of openly hosted digital textbooks."
+>
+  {/* Flash guard: if the URL carries filters, hide results until the client
+      script applies them. Runs synchronously before the cards below are
+      painted. No-JS visitors never reach this branch, so they see all cards. */}
+  <script is:inline>
+    if (new URLSearchParams(location.search).toString()) {
+      document.documentElement.classList.add('is-prefiltering');
+    }
+  </script>
+
+  <div class="container catalogue" data-catalogue>
+    <header class="catalogue__intro">
+      <h1>Catalogue</h1>
+      <p class="catalogue__lede">
+        Browse <span data-total-count>{books.length}</span> openly hosted
+        digital textbooks. Filter by language, variant and subject, or search
+        across titles, descriptions, keywords and authors.
+      </p>
+    </header>
+
+    <div class="catalogue__toolbar">
+      <SearchBar initialValue={initialState.search} />
+    </div>
+
+    <div class="catalogue__layout">
+      <aside class="catalogue__sidebar">
+        <FilterPanel facets={facets} selected={initialState.facets} />
+      </aside>
+
+      <section class="catalogue__results" aria-label="Search results">
+        <p class="catalogue__count" role="status" aria-live="polite">
+          Showing <strong data-result-count>{books.length}</strong> of
+          <span data-total-count>{books.length}</span> textbooks
+        </p>
+
+        <ul class="catalogue__grid" role="list">
+          {
+            books.map((book) => (
+              <li>
+                <TextbookCard book={book} />
+              </li>
+            ))
+          }
+        </ul>
+
+        <p class="catalogue__empty" data-empty-state hidden>
+          No textbooks match the current filters. Try removing a filter or
+          clearing your search.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import '../scripts/catalogue.ts';
+</script>
+
+<style>
+  .catalogue__intro {
+    max-width: var(--reading-width);
+    margin-bottom: var(--space-6);
+  }
+  .catalogue__intro h1 {
+    font-size: var(--text-3xl);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-3);
+  }
+  .catalogue__lede {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+  }
+
+  .catalogue__toolbar {
+    margin-bottom: var(--space-6);
+    max-width: 36rem;
+  }
+
+  .catalogue__layout {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .catalogue__count {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+  }
+  .catalogue__count strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+
+  .catalogue__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  /* Explicitly collapse hidden grid items (the client toggles `hidden` on the
+     <li>). Guarantees the cell is removed regardless of UA `[hidden]` rules. */
+  .catalogue__grid li[hidden] {
+    display: none;
+  }
+
+  .catalogue__empty {
+    margin-top: var(--space-4);
+    padding: var(--space-8) var(--space-5);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    border: 1px dashed var(--color-border-strong);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  /* Sidebar on the left from tablet up; stacked on mobile. */
+  @media (min-width: 48rem) {
+    .catalogue__layout {
+      grid-template-columns: 14rem 1fr;
+      align-items: start;
+      gap: var(--space-8);
+    }
+    .catalogue__sidebar {
+      position: sticky;
+      top: var(--space-5);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .catalogue__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
