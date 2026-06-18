@@ -282,3 +282,39 @@ img {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+
+/*
+ * ---- Box grid ----
+ * A simple responsive grid of bordered boxes for markdown pages (used via raw
+ * HTML, e.g. the "Get Involved" page). Global utility classes because
+ * markdown-rendered HTML doesn't receive Astro's scoped style attributes.
+ * The `.prose .box ...` selectors keep box headings/text from inheriting the
+ * larger prose heading/paragraph rhythm.
+ */
+.box-grid {
+  display: grid;
+  gap: var(--space-4);
+}
+@media (min-width: 38rem) {
+  .box-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.box-grid .box {
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  padding: var(--space-5);
+}
+.box-grid .box > * + * {
+  margin-top: var(--space-2);
+}
+.prose .box-grid .box h2 {
+  font-size: var(--text-lg);
+  margin: 0;
+}
+.prose .box-grid .box p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
