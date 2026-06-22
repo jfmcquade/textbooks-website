@@ -47,9 +47,9 @@
   --color-text: #18181b;
   --color-text-muted: #5b5b66;
   --color-text-subtle: #8a8a94;
-  --color-accent: #1d4ed8;
-  --color-accent-hover: #1e40af;
-  --color-focus: #2563eb;
+  --color-accent: #f37021;
+  --color-accent-hover: #d95f15;
+  --color-focus: #f37021;
 
   /* ---- Other tokens ---- */
   --radius: 6px;
