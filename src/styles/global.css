@@ -322,3 +322,42 @@ img {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
+
+/*
+ * ---- Tables ----
+ * Wide comparison tables (e.g. the Product page audience matrix). Wrap the
+ * table in `.table-scroll` so it scrolls horizontally on small screens rather
+ * than overflowing the page. Global classes because markdown-rendered HTML
+ * doesn't receive Astro's scoped style attributes. Cells reset to the prose
+ * rhythm via `> * + *` since they aren't direct children of `.prose`.
+ */
+.table-scroll {
+  overflow-x: auto;
+}
+.prose table {
+  width: 100%;
+  min-width: 52rem;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+.prose th,
+.prose td {
+  border: var(--border);
+  padding: var(--space-3);
+  text-align: left;
+  vertical-align: top;
+}
+.prose thead th,
+.prose tbody th {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: 600;
+}
+.prose td > * + *,
+.prose th > * + * {
+  margin-top: var(--space-2);
+}
+.prose td ul,
+.prose th ul {
+  margin-left: var(--space-4);
+}

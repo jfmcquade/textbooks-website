@@ -4,10 +4,12 @@
  * Every page renders inside this so spacing, navigation and metadata stay
  * consistent.
  *
- * The header nav is built from the fixed app pages (Home, Library) plus every
- * markdown page in the `pages` collection — so dropping a file into
- * `src/content/pages/` makes it appear in the nav automatically. A page can opt
- * out with `nav: false` in its frontmatter, and order with `order: <n>`.
+ * The header nav is Home (always first), then the Library app route and every
+ * markdown page in the `pages` collection, interleaved by `order` — so dropping
+ * a file into `src/content/pages/` makes it appear in the nav automatically. A
+ * page can opt out with `nav: false`, and set its position with `order: <n>`
+ * (lower first; ties fall back to alphabetical by label). Library is a fixed
+ * route, so its own `order` is set below alongside the other fixed links.
  */
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
@@ -27,26 +29,28 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 // subpath) so internal links work in every deployment target.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-// Markdown pages, in nav order: explicit `order` first (ascending), then
-// alphabetical by title. Pages with `nav: false` are excluded.
+// Markdown pages as nav entries (excluding any opted out with `nav: false`),
+// each carrying its `order` (default: last) for the shared sort below.
 const pageLinks = (await getCollection('pages'))
   .filter((page) => page.data.nav)
-  .sort((a, b) => {
-    const ao = a.data.order ?? Infinity;
-    const bo = b.data.order ?? Infinity;
-    if (ao !== bo) return ao - bo;
-    return a.data.title.localeCompare(b.data.title);
-  })
   .map((page) => ({
     href: `${base}/${page.data.slug ?? page.id}`,
     label: page.data.title,
+    order: page.data.order ?? Infinity,
   }));
 
-const nav = [
-  { href: `${base}/`, label: 'Home' },
-  { href: `${base}/library`, label: 'Library' },
-  ...pageLinks,
-];
+// Library is a fixed app route (not a markdown page) but takes part in the same
+// ordering, so a markdown page (e.g. Product) can sit before or after it.
+const libraryLink = { href: `${base}/library`, label: 'Library', order: 2 };
+
+// All non-Home links in nav order: `order` ascending, ties alphabetical by
+// label. Home is always first.
+const orderedLinks = [libraryLink, ...pageLinks].sort((a, b) => {
+  if (a.order !== b.order) return a.order - b.order;
+  return a.label.localeCompare(b.label);
+});
+
+const nav = [{ href: `${base}/`, label: 'Home' }, ...orderedLinks];
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 // The site root with any base path applied: '/textbooks-website' under a
 // project subpath, or '/' at a domain root. Used to detect the Home link
